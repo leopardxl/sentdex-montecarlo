@@ -27,10 +27,10 @@ def doubler_better(funds, initial_wager, wager_count):
     vY = []
 
     prevWin = True
-    prevWagerAmount = wager
+    #prevWagerAmount = wager
 
     while num_wagers <= wager_count:
-        prevWagerAmount = wager
+        #prevWagerAmount = wager
         if rollDice():
             value += wager
             prevWin = True
@@ -40,12 +40,15 @@ def doubler_better(funds, initial_wager, wager_count):
             value -= wager
             privWin = False
             wager = wager * 2
+            if (value - wager) < 0:
+                wager = value
+
 
         wX.append(num_wagers)
         vY.append(value)
 
         num_wagers += 1
-        if value < 0:
+        if value <= 0:
             broke = True
             break
 
@@ -110,41 +113,6 @@ def main():
     sim_doubler_bettor = simulation(doubler_better)
     plt.show()
 
-def main2():
-
-    sample_size = 100
-    starting_funds = 10000
-    initial_wager = 100
-    max_wagers = 100
-
-    outcomes = []
-    broke_count = 0
-    x = 0
-    while x < sample_size:
-        outcome = simple_bettor(starting_funds, initial_wager, max_wagers)
-        if outcome.broke:
-            broke_count += 1
-
-        outcomes.append(outcome)
-        x += 1
-    print("death rate: ", broke_count*100/float(x) )
-    print("survival rate:", 100 -  broke_count*100/float(x) )
-    graph(outcomes)
-
-
-    outcomes = []
-    broke_count = 0
-    x = 0
-    while x < sample_size:
-        outcome = doubler_better(starting_funds, initial_wager, max_wagers)
-        if outcome.broke:
-            broke_count += 1
-
-        outcomes.append(outcome)
-        x += 1
-    print("death rate: ", broke_count*100/float(x) )
-    print("survival rate:", 100 -  broke_count*100/float(x) )
-    graph(outcomes)
 
 
 if __name__ == '__main__':
