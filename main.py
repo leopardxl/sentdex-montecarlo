@@ -17,6 +17,7 @@ def rollDice():
         #print(roll, ", role was 51-99, you win")
         return True
 
+
 def doubler_better(funds, initial_wager, wager_count):
     value = funds
     wager = initial_wager
@@ -75,24 +76,52 @@ def simple_bettor(funds, initial_wager, wager_count):
 
     return Outcome(wX, vY, broke)
 
-
-
 def graph(outcomes):
     for each in outcomes:
         plt.plot(each.wagers, each.funds)
     plt.ylabel('Account Value')
     plt.xlabel('Wager Count')
     plt.axhline(0, color = 'r')
-    plt.show()
 
+def simulation(bettor):
+    sample_size = 100
+    starting_funds = 10000
+    initial_wager = 100
+    max_wagers = 1000
 
-def main():
     outcomes = []
     broke_count = 0
     x = 0
-    while x < 1000:
-        outcome = simple_bettor(10000, 100, 10000)
-        #outcome = doubler_better(10000, 100, 100)
+    while x < sample_size:
+        outcome = bettor(starting_funds, initial_wager, max_wagers)
+        if outcome.broke:
+            broke_count += 1
+
+        outcomes.append(outcome)
+        x += 1
+    print("death rate: ", broke_count*100/float(x) )
+    print("survival rate:", 100 -  broke_count*100/float(x) )
+    graph(outcomes)
+    return outcomes
+
+
+def main():
+    sim_simple_bettor = simulation(simple_bettor)
+    sim_doubler_bettor = simulation(doubler_better)
+    plt.show()
+
+def main2():
+
+    sample_size = 100
+    starting_funds = 10000
+    initial_wager = 100
+    max_wagers = 100
+
+    outcomes = []
+    broke_count = 0
+    x = 0
+    while x < sample_size:
+        outcome = simple_bettor(starting_funds, initial_wager, max_wagers)
         if outcome.broke:
             broke_count += 1
 
@@ -102,5 +131,22 @@ def main():
     print("survival rate:", 100 -  broke_count*100/float(x) )
     graph(outcomes)
 
+
+    outcomes = []
+    broke_count = 0
+    x = 0
+    while x < sample_size:
+        outcome = doubler_better(starting_funds, initial_wager, max_wagers)
+        if outcome.broke:
+            broke_count += 1
+
+        outcomes.append(outcome)
+        x += 1
+    print("death rate: ", broke_count*100/float(x) )
+    print("survival rate:", 100 -  broke_count*100/float(x) )
+    graph(outcomes)
+
+
 if __name__ == '__main__':
     main()
+    #main2()
