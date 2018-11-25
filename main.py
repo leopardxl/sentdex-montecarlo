@@ -91,8 +91,8 @@ def multiple_bettor(funds, initial_wager, wager_count, multiple=0):
 
     return Outcome(wX, vY, broke, profit)
 
-def dalembert(funds, initial_wager, wager_count, multiple=0):
-    '''global random_mulitple
+def dalembert_bettor(funds, initial_wager, wager_count, multiple=0):
+    global random_mulitple
     value = funds
     wager = initial_wager
     num_wagers = 1
@@ -100,19 +100,19 @@ def dalembert(funds, initial_wager, wager_count, multiple=0):
     profit = False
     wX = []
     vY = []
-    if multiple == 0:
-        multiple = random_mulitple
 
     while num_wagers <= wager_count:
         if DEBUG > 100:
             print("On wager: ", num_wagers, end="\r")
         if rollDice():
             value += wager
-            wager = initial_wager
-
+            if wager <= initial_wager:
+                wager = initial_wager
+            else:
+                wager -= initial_wager
         else:
             value -= wager
-            wager = wager * multiple
+            wager += initial_wager
             if (value - wager) < 0:
                 wager = value
 
@@ -127,7 +127,7 @@ def dalembert(funds, initial_wager, wager_count, multiple=0):
     if value > funds:
         profit = True
 
-    return Outcome(wX, vY, broke, profit)'''
+    return Outcome(wX, vY, broke, profit)
 
 def doubler_bettor(funds, initial_wager, wager_count):
     return multiple_bettor(funds, initial_wager, wager_count, 2)
@@ -227,11 +227,12 @@ def random_simulation():
 
 def main():
     global graphing, DEBUG
-    graphing = False
+    graphing = True
     DEBUG = 0
     # simulation(simple_bettor)
     # simulation(doubler_bettor)
-    random_simulation()
+    # random_simulation()
+    simulation(dalembert_bettor)
 
 
     if graphing:
