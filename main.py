@@ -157,7 +157,6 @@ def simple_bettor(funds, initial_wager, wager_count):
 
 def simulation(bettor):
     global graphing, random_mulitple
-
     winner = False
     sample_size = 100
     starting_funds = 10000
@@ -275,7 +274,6 @@ def main():
 
     if graphing:
          plt.show()
-
 
 if __name__ == '__main__':
     main()
